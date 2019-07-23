@@ -13,14 +13,13 @@ class Buffer:
 
     def process(self, request):
         # write your code here
-        count_pop = 0
-        for i in range(len(self.finish_time)):
-            if self.finish_time[i] <= request.arrived_at:
-                count_pop += 1
+        if len(self.finish_time) == 0:
+            left_pop = 0
+        else:
+            left_pop = lower_pop(self.finish_time, request.arrived_at)
 
         # print('pop', count_pop)
-        for i in range(count_pop):
-            self.finish_time.pop(0)
+        self.finish_time = self.finish_time[left_pop:]
 
         if len(self.finish_time) == 0:
             start_time = request.arrived_at
@@ -40,6 +39,28 @@ class Buffer:
         # print(self.finish_time)
 
         return Response(False, start_time)
+
+
+def lower_pop(a, x):
+    lower = list()
+    left, right = 0, len(a)
+
+    if (a[left] > x):
+        return len(lower)
+
+    if (a[right-1] <= x):
+        return len(a)
+
+    while (left <= right):
+        mid = (left + right) // 2
+
+        if (a[mid] <= x):
+            lower += a[left:mid+1]
+            left = mid + 1
+        else:
+            right = mid - 1
+
+    return len(lower)
 
 
 def process_requests(requests, buffer):
