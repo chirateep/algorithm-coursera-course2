@@ -13,34 +13,31 @@ class Buffer:
 
     def process(self, request):
         # write your code here
+        count_pop = 0
+        for i in range(len(self.finish_time)):
+            if self.finish_time[i] <= request.arrived_at:
+                count_pop += 1
+
+        # print('pop', count_pop)
+        for i in range(count_pop):
+            self.finish_time.pop(0)
+
         if len(self.finish_time) == 0:
             start_time = request.arrived_at
         else:
             last_element = len(self.finish_time)
-            if request.arrived_at < self.finish_time[last_element - 1]:
-                print('late')
-                return Response(True, -1)
-
             start_time = max(self.finish_time[last_element - 1],
                              request.arrived_at)
-            count_pop = 0
-            for i in range(len(self.finish_time)):
-                if self.finish_time[i] <= request.arrived_at:
-                    count_pop += 1
-
-            print('pop', count_pop)
-            for i in range(count_pop):
-                self.finish_time.pop(0)
 
         finish_time = start_time + request.time_to_process
-        print('fin time', finish_time)
+        # print('fin time', finish_time)
 
         if len(self.finish_time) < self.size:
             self.finish_time.append(finish_time)
         else:
             return Response(True, -1)
 
-        print(self.finish_time)
+        # print(self.finish_time)
 
         return Response(False, start_time)
 
