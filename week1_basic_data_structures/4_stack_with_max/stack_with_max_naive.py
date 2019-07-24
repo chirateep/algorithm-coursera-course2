@@ -6,23 +6,24 @@ import sys
 class StackWithMax():
     def __init__(self):
         self.__stack = deque()
+        self.__max_stack = deque()
         self.__max = -1
 
     def Push(self, a):
         self.__stack.append(a)
-        if a > self.__max:
+        if a >= self.__max:
+            if self.__max == -1:
+                pass
+            else:
+                self.__max_stack.append(self.__max)
             self.__max = a
+        # print(self.__max_stack)
 
     def Pop(self):
         assert(len(self.__stack))
         pop = self.__stack.pop()
         if pop == self.__max:
-            self.__max = -1
-            for i in range(len(self.__stack)):
-                left = self.__stack.popleft()
-                if left > self.__max:
-                    self.__max = left
-                self.__stack.append(left)
+            self.__max = self.__max_stack.pop()
 
     def Max(self):
         assert(len(self.__stack))
