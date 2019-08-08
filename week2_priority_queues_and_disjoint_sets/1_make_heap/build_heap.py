@@ -21,12 +21,55 @@ def build_heap(data):
     return swaps
 
 
+def fast_build_heap(data):
+    swaps = []
+    size = len(data)
+    for i in range(len(data) // 2, 0, -1):
+        # siftdown(i-1)
+        # print("first", i)
+        min_index = -1
+        while (i != min_index):
+            min_index = i
+            left = left_child(i)
+            # print("left", left)
+            if left <= size and data[left-1] < data[min_index-1]:
+                min_index = left
+            right = right_child(i)
+            if right <= size and data[right-1] < data[min_index-1]:
+                min_index = right
+
+            if i == min_index:
+                break
+            else:
+                swaps.append((i-1, min_index-1))
+                data[i - 1], data[min_index-1] = data[min_index-1], data[i-1]
+                i = min_index
+                min_index = -1
+
+            # print("data", data)
+        # print(i)
+    # print("data finish", data)
+    return swaps
+
+
+def parent(i):
+    return (i + 1) // 2
+
+
+def left_child(i):
+    return (2 * i)
+
+
+def right_child(i):
+    return (2 * i) + 1
+
+
 def main():
     n = int(input())
     data = list(map(int, input().split()))
     assert len(data) == n
 
-    swaps = build_heap(data)
+    swaps = fast_build_heap(data)
 
     print(len(swaps))
     for i, j in swaps:
