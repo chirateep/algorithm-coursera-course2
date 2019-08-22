@@ -13,10 +13,10 @@ class Solver:
 
     def precompute_hash(self):
 
-        h1 = [0] * len(self.s)
-        h2 = [0] * len(self.s)
+        h1 = [0] * (len(self.s) + 1)
+        h2 = [0] * (len(self.s) + 1)
         # print(h1, h2)
-        for i in range(1, len(self.s)):
+        for i in range(1, len(self.s) + 1):
             # print(i)
             # print(s[i])
             h1[i] = ((x * h1[i-1]) + ord(self.s[i-1])) % m1
@@ -43,5 +43,5 @@ s = sys.stdin.readline()
 q = int(sys.stdin.readline())
 solver = Solver(s)
 for i in range(q):
-    a, b, l = map(int, sys.stdin.readline().split())
-    print("Yes" if solver.ask(a, b, l) else "No")
+    a, b, length = map(int, sys.stdin.readline().split())
+    print("Yes" if solver.ask(a, b, length) else "No")
