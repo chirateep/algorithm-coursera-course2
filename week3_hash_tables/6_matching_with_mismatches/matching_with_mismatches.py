@@ -15,33 +15,27 @@ def solve(k, text, pattern):
     p_h1_pre, p_h2_pre = precompute_hash(pattern)
     t_h1_pre, t_h2_pre = precompute_hash(text)
     for i in range(len(text) - len(pattern) + 1):
+        s = t[i: i + len(pattern)]
+        s_h1_pre = t_h1_pre[i: i + len(pattern) + 1]
+        s_h2_pre = t_h2_pre[i: i + len(pattern) + 1]
         for _ in range(k):
             max_substring = Answer(0, 0, 0)
-            s_h1_pre = t_h1_pre[i: i + len(pattern) + 1]
-            s_h2_pre = t_h2_pre[i: i + len(pattern) + 1]
             # print(s_h1_pre)
             found = False
             left = 0
             right = len(pattern)
+            # print(s_h1_pre, s_h2_pre)
+            # print(p_h1_pre, p_h2_pre)
             while(left <= right):
                 mid = (left + right) // 2
                 # print('mid', mid)
-                s_h1_dict = dict()
-                s_h2_dict = dict()
-                for j in range(len(pattern) - mid + 1):
-                    s_h1, s_h2 = hash_value(s_h1_pre, s_h2_pre, j, mid)
-                    s_h1_dict[s_h1] = j
-                    s_h2_dict[s_h2] = j
-
-                for j in range(len(pattern) - mid + 1):
-                    p_h1, p_h2 = hash_value(p_h1_pre, p_h2_pre, j, mid)
-
-                    if s_h1_dict.get(p_h1) is None or s_h2_dict.get(p_h2) is None:
-                        continue
-                    else:
-                        found = True
-                        max_substring = Answer(s_h1_dict.get(p_h1), j, mid)
-                        break
+                # print('s', s[0:mid])
+                # print('p', p[0:mid])
+                s_h1, s_h2 = hash_value(s_h1_pre, s_h2_pre, 0, mid)
+                p_h1, p_h2 = hash_value(p_h1_pre, p_h2_pre, 0, mid)
+                if s_h1 == p_h1 and s_h2 == p_h2:
+                    found = True
+                    max_substring = Answer(0, 0, mid)
 
                 if found:
                     left = mid + 1
@@ -50,23 +44,21 @@ def solve(k, text, pattern):
                     right = mid - 1
 
             # print(max_substring)
-            if max_substring.i != 0:
-                pos_text = max_substring.i + i - 1
-                pos_pattern = max_substring.j - 1
-                text = text[:pos_text] + pattern[pos_pattern] + text[pos_text+1:]
-            else:
-                pos_text = max_substring.len + max_substring.i + i - 1
-                pos_pattern = max_substring.len + max_substring.j - 1
-                # print(text[pos_text])
-                # print(pattern[pos_pattern])
-                text = text[:pos_text] + pattern[pos_pattern] + text[pos_text+1:]
-                # print(text)
-            t_h1_pre, t_h2_pre = precompute_hash(text)
-
+            if max_substring.len == len(pattern):
+                break
+            pos = max_substring.len
+            # print('pos', pos)
+            # print(s[pos])
+            # print(pattern[pos])
+            s = s[:pos] + pattern[pos] + s[pos+1:]
+            # print('s', s)
+            s_h1_pre, s_h2_pre = precompute_hash(s)
         p_h1, p_h2 = hash_value(p_h1_pre, p_h2_pre, 0, len(pattern))
-        t_h1, t_h2 = hash_value(t_h1_pre, t_h2_pre, i, len(pattern))
-        if p_h1 == t_h1 and p_h2 == t_h2:
+        s_h1, s_h2 = hash_value(s_h1_pre, s_h2_pre, 0, len(s))
+        if p_h1 == s_h1 and p_h2 == s_h2:
+            # print('add')
             result.append(i)
+        # print('==========')
     return result
 
 
