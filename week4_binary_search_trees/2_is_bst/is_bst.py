@@ -10,6 +10,7 @@ threading.stack_size(2**25)  # new thread will get stack of such size
 key = []
 left = []
 right = []
+result = []
 
 
 def IsBinarySearchTree(tree):
@@ -20,27 +21,21 @@ def IsBinarySearchTree(tree):
         left.append(tree[i][1])
         right.append(tree[i][2])
 
-    for i in range(len(tree)):
-        find_pos = find(key[i], 0)
-        if find_pos == i:
-            continue
-        else:
+    if len(tree) > 0:
+        _inOrderRecursive(0)
+
+    for i in range(len(result) - 1):
+        if result[i] > result[i + 1]:
             is_binary = False
-            return
     return is_binary
 
 
-def find(k, root):
-    if key[root] == k:
-        return root
-    elif key[root] > k:
-        if left[root] != -1:
-            return find(k, left[root])
-        return root
-    elif key[root] < k:
-        if right[root] != -1:
-            return find(k, right[root])
-        return root
+def _inOrderRecursive(root):
+    if root == -1:
+        return
+    _inOrderRecursive(left[root])
+    result.append(key[root])
+    _inOrderRecursive(right[root])
 
 
 def main():
