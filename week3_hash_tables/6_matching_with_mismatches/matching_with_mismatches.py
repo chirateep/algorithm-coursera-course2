@@ -1,4 +1,4 @@
-# python3
+# python2
 
 import sys
 from collections import namedtuple
@@ -62,4 +62,7 @@ def hash_value(h1_pre, h2_pre, a, l):
 for line in sys.stdin.readlines():
     k, t, p = line.split()
     ans = solve(int(k), t, p)
-    print(len(ans), *ans)
+    format_ans = '{0}'.format(len(ans))
+    for x in ans:
+        format_ans += ' {0}'.format(x)
+    print(format_ans)
